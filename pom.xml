@@ -12,6 +12,7 @@
         <module>module1_logging</module>
         <module>module2_configure_logging</module>
         <module>module3_logmanager</module>
+        <module>module4_slf4j</module>
     </modules>
 
     <properties>
