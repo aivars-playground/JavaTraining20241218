@@ -14,6 +14,7 @@
         <module>module3_logmanager</module>
         <module>module4_slf4j</module>
         <module>module5_testing_basics</module>
+        <module>module6_test_lifecycle</module>
     </modules>
 
     <properties>
