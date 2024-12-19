@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -105,13 +106,44 @@ public class MyTest {
 
     @Test
     public void test_get_all_errors() {
-
         assertAll("check all items",
                 () -> assertEquals(1,1),
                 () -> assertEquals(2,"B"),
                 () -> assertEquals(3,3),
                 () -> assertEquals(4,"D")
         );
+    }
+
+    record Customer(int id, String name) {}
+    interface Database {
+        Optional<Customer> getCustomer(int id);
+    }
+    class Service {
+        private final Database database;
+        public Service(Database database) {this.database = database;}
+        String getCustomerName(int id) {
+            return database.getCustomer(id).map(Customer::name).orElse(null);
+        }
+    }
+
+    @Test
+    public void test_with_test_double() {
+        Database testDoubleDatabase = new Database() {
+            @Override
+            public Optional<Customer> getCustomer(int id) {
+                if(id > 0) {
+                    return Optional.of(new Customer(id,"testName"+id));
+                } else {
+                    return Optional.empty();
+                }
+            }
+        };
+
+        var sut = new Service(testDoubleDatabase);
+
+        assertEquals(null,sut.getCustomerName(0));
+        assertEquals("testName1",sut.getCustomerName(1));
+        assertEquals("testName2",sut.getCustomerName(2));
     }
 
 }
