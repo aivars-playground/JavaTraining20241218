@@ -13,6 +13,7 @@
         <module>module2_configure_logging</module>
         <module>module3_logmanager</module>
         <module>module4_slf4j</module>
+        <module>module5_testing_basics</module>
     </modules>
 
     <properties>
