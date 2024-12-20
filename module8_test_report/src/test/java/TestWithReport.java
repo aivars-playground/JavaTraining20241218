@@ -98,7 +98,14 @@ public class TestWithReport {
                 System.out.println("float 0.1333333, precision 3 --- " + BigDecimal.valueOf(1.15f).subtract(BigDecimal.valueOf(1.05f)));
                 System.out.println("float 0.1333333, precision 3 --- " + BigDecimal.valueOf(1.15).subtract(BigDecimal.valueOf(1.05)));
 
+                System.out.println("float 1/3" + (1f/3f));
+                System.out.println("d 1/3" + (1d/3d));
+                System.out.println("big 1/3 = " + (BigDecimal.ONE.divide(BigDecimal.valueOf(3),new MathContext(10000))));
+                System.out.println("big 1/3 = " + (BigDecimal.ONE.divide(BigDecimal.valueOf(3),new MathContext(10000))).multiply(BigDecimal.valueOf(3),new MathContext(9999)));
 
+                var not0 = (BigDecimal.ONE.divide(BigDecimal.valueOf(3),new MathContext(10000))).multiply(BigDecimal.valueOf(3),new MathContext(10000)).subtract(new BigDecimal(1.0f,new MathContext(10000)));
+                System.out.println(not0);
+                System.out.println(not0.setScale(9999, RoundingMode.DOWN).compareTo(BigDecimal.ZERO.setScale(9999, RoundingMode.DOWN)));
 
             }
         }
