@@ -61,5 +61,14 @@ public class StringTest {
 
         assertEquals("1,000$",res);
 
+
+        String res2 = testStrWithCurrency
+                .transform(String::toUpperCase)
+                .transform(removeLetters)
+                .transform(String::strip)
+                .transform(usNumber)
+                .concat("$");
+
+        assertEquals(res2,res);
     }
 }
