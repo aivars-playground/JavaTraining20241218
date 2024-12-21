@@ -121,4 +121,23 @@ public class StringTest {
 
         System.out.println("in :"+address+ "\nout:" + back);
     }
+
+
+    @Test
+    void test_read_lines() {
+        var text = """
+                Tokyo,      37000000
+                New York,   20_000_000
+                Paris,      11.000.000
+                """;
+
+        var populations = text.lines()
+                .map(line -> line.split(",")[1])
+                .map(population -> population.replaceAll("[^\\d]",""))
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+
+        System.out.println(populations);
+    }
+
 }
