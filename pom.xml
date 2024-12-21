@@ -17,6 +17,7 @@
         <module>module6_test_lifecycle</module>
         <module>module7_parameterized_tests</module>
         <module>module8_test_report</module>
+        <module>module9_misc</module>
     </modules>
 
     <properties>
