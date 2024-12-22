@@ -8,6 +8,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -108,6 +110,17 @@ public class TestWithReport {
                 System.out.println(not0.setScale(9999, RoundingMode.DOWN).compareTo(BigDecimal.ZERO.setScale(9999, RoundingMode.DOWN)));
 
             }
+        }
+
+        @Test
+        void testRandom() {
+
+            //old school
+            var ir = new Random().nextInt();
+
+            //better speed better randomness
+            var ir_better = ThreadLocalRandom.current().nextInt();
+
         }
     }
 }

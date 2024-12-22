@@ -1,11 +1,14 @@
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -138,6 +141,41 @@ public class StringTest {
                 .collect(Collectors.toList());
 
         System.out.println(populations);
+    }
+
+    @Test
+    void format_number() {
+        var locale = Locale.forLanguageTag("lv-LV");
+        var styleStandard = NumberFormat.getNumberInstance(locale);
+
+        var styleShort = NumberFormat.Style.SHORT;
+        var compactFormatShort = NumberFormat.getCompactNumberInstance(locale, styleShort);
+
+        var styleLong = NumberFormat.Style.LONG;
+        var compactFormatLong = NumberFormat.getCompactNumberInstance(locale, styleLong);
+
+        System.out.println("styleStandard:"+styleStandard.format(1_500_000));               //1 500 000
+        System.out.println("compactFormatShort:"+compactFormatShort.format(1_500_000));     //2 milj.
+        System.out.println("compactFormatLong:"+compactFormatLong.format(1_500_000));       //2 miljons !!!!!
+
+    }
+
+    @Test
+    void increase_price() {
+
+        List<String> prices = List.of("20.15","37.22","58.19");
+
+        DecimalFormat df = new DecimalFormat("0.##");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+
+        var res = prices.stream()
+                .map(Double::valueOf)
+                .map(price -> price * 1.20)
+                .map(df::format)
+                .toList();
+
+        assertEquals(List.of("24.18","44.66","69.83"), res);
+
     }
 
 }
