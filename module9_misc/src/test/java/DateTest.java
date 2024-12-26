@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.*;
 
 public class DateTest {
@@ -131,5 +132,14 @@ public class DateTest {
         System.out.println("leg1:"+new Flight("Europe/London", "America/New_York", departureLondonToNy,8));
         var departureNyToYakutat = LocalDateTime.of(2025,1,1,12, 0);
         System.out.println("leg2:"+new Flight("America/New_York", "America/Yakutat",departureNyToYakutat,4));
+    }
+
+    @Test
+    public void zonedTime() {
+
+        ZonedDateTime now = LocalDateTime.now().atZone(ZoneId.systemDefault());
+
+        System.out.println(now.getZone() + " " + now.format(DateTimeFormatter.ISO_LOCAL_TIME));
+
     }
 }
