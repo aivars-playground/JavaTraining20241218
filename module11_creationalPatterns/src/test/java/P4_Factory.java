@@ -1,12 +1,8 @@
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.DocumentType;
 
-import java.text.DateFormat;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class P4_Factory {
@@ -31,15 +27,15 @@ public class P4_Factory {
 
 record Data(String title, List<String> paragraphs, LocalDate date) implements Cloneable {}
 
-interface Document {
+interface DocumentTemplate {
     String body(Data data);
 }
 
 
 class PageFactory {
 
-    public static Document getDocument(DocumentType documentType, Locale locale) {
-        Document document = null;
+    public static DocumentTemplate getDocument(DocumentType documentType, Locale locale) {
+        DocumentTemplate document = null;
         switch (documentType) {
             case HTML -> document = new HtmlTemplate(locale.getDisplayLanguage());
             case XML_FO -> document = new XMLFOTemplate(locale);
@@ -51,7 +47,7 @@ class PageFactory {
         XML_FO, HTML
     }
 
-    private static class HtmlTemplate implements Document {
+    private static class HtmlTemplate implements DocumentTemplate {
         private final String language;
         HtmlTemplate(String language) {
             this.language = language;
@@ -70,7 +66,7 @@ class PageFactory {
         }
     }
 
-    private static class XMLFOTemplate implements Document {
+    private static class XMLFOTemplate implements DocumentTemplate {
         private final String language;
         private final String papersize;
         XMLFOTemplate(Locale locale) {
