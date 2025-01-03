@@ -8,7 +8,11 @@ public class App {
         Dao<Book> bookDao = new BookDao();
 
         var allBooks = bookDao.findAll();
-        System.out.println(allBooks);
+        System.out.println("all->"+allBooks);
+
+        var book1 = bookDao.findById(1);
+        System.out.println("book1->"+(book1.isPresent()?book1.get():"Not found"));
+
 
     }
 }

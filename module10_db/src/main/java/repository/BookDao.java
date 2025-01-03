@@ -2,19 +2,16 @@ package repository;
 
 import model.Book;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
-public class BookDao extends AbstractDao implements Dao {
+public class BookDao extends AbstractDao implements Dao<Book> {
 
     @Override
-    public List findAll() {
+    public List<Book> findAll() {
 
         List<Book> books = new ArrayList<>();
         String sql = "select * from BOOK";
@@ -38,22 +35,42 @@ public class BookDao extends AbstractDao implements Dao {
     }
 
     @Override
-    public Optional findById(long id) {
-        return Optional.empty();
+    public Optional<Book> findById(long id) {
+        Optional<Book> book = Optional.empty();
+        String sql = "select id,title from BOOK where id = ?";
+        try (
+            Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setLong(1, id);
+            try (
+                ResultSet resultSet = preparedStatement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    Book book1 = new Book();
+                    book1.setId(resultSet.getLong("id"));
+                    book1.setTitle(resultSet.getString("title"));
+                    book = Optional.of(book1);
+                }
+            }
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return book;
     }
 
     @Override
-    public void save(Object o) {
+    public void save(Book o) {
 
     }
 
     @Override
-    public void update(Object o, String[] params) {
+    public void update(Book o, String[] params) {
 
     }
 
     @Override
-    public void delete(Object o) {
+    public void delete(Book o) {
 
     }
 }
