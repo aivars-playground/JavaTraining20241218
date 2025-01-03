@@ -60,18 +60,99 @@ public class BookDao extends AbstractDao implements Dao<Book> {
     }
 
     @Override
-    public void save(Book o) {
+    public Book create(Book book) {
+        String sql = "insert into BOOK (title) values (?)";
 
+        try (
+            Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        ) {
+            preparedStatement.setString(1, book.getTitle());
+            preparedStatement.executeUpdate();
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    book.setId(generatedKeys.getLong(1));
+                }
+            }
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+
+        return book;
     }
 
     @Override
-    public void update(Book o, String[] params) {
-
+    public Book updateBatch(Book book) {
+        String sql = "update BOOK set title = ? where id = ?";
+        try (
+            Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ) {
+            preparedStatement.setString(1, book.getTitle());
+            preparedStatement.setLong(2, book.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return book;
     }
 
     @Override
-    public void delete(Book o) {
+    public int[] updateBatch(List<Book> books) {
+        int[] countAffected = {};
 
+        String sql = "update BOOK set title = ? where id = ?";
+        try (
+            Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ) {
+            for (Book book : books) {
+                preparedStatement.setString(1, book.getTitle());
+                preparedStatement.setLong(2, book.getId());
+                preparedStatement.addBatch();
+            }
+            countAffected = preparedStatement.executeBatch();
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+
+        return countAffected;
+    }
+
+    @Override
+    public int delete(Book book) {
+        int countAffected = 0;
+        String sql = "delete from BOOK where id = ?";
+        try (
+            Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ) {
+            preparedStatement.setLong(1, book.getId());
+            countAffected = preparedStatement.executeUpdate();
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return countAffected;
+    }
+
+    @Override
+    public int[] deleteBatch(List<Book> books) {
+        int[] countAffected = {};
+        String sql = "delete from BOOK where id = ?";
+        try (
+                Connection connection = getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ) {
+            for (Book book : books) {
+                preparedStatement.setLong(1, book.getId());
+                preparedStatement.addBatch();
+            }
+
+            countAffected = preparedStatement.executeBatch();
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return countAffected;
     }
 }
 
