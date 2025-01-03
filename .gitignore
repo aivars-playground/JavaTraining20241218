@@ -14,7 +14,7 @@ target/
 .idea
 /logs/*.log
 
-./.data
+*/.data
 
 ### Eclipse ###
 .apt_generated
