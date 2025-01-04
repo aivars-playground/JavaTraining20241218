@@ -22,13 +22,3 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: pass
       MYSQL_DATABASE: airport_db
-  db_person:
-    image: mysql:8.0
-    container_name: person
-    ports:
-      - 33062:3306
-    volumes:
-      - "./.data/person:/var/lib/mysql"
-    environment:
-      MYSQL_ROOT_PASSWORD: pass
-      MYSQL_DATABASE: person_db

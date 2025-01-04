@@ -1,6 +1,6 @@
-import hib_repository.Airport;
-import hib_repository.Passenger;
-import hib_repository.Ticket;
+import hib_primarykey.ItemWithCompKey;
+import hib_primarykey.MyCompositeKey;
+import hib_primarykey.SimpleItem;
 import hib_secondary_repo.NicePerson;
 import hib_secondary_repo.Person;
 import jakarta.persistence.EntityManager;
@@ -10,7 +10,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.util.logging.LogManager;
 
-public class HibernateSecondaryApp {
+public class HibernatePrimarykeyApp {
     public static void main(String[] args) {
 
         switchToSLF4JBridge();
@@ -18,13 +18,23 @@ public class HibernateSecondaryApp {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistenceUnit_airport");
         EntityManager em = emf.createEntityManager();
 
-        Person person = new Person(1,"John", "address street 1");
-        NicePerson nicePerson = new NicePerson(2, "Smith", "address street 2", 200, "not so nice...");
-
         em.getTransaction().begin();
 
-        em.persist(person);
-        em.persist(nicePerson);
+        SimpleItem simpleItem = new SimpleItem();
+        em.persist(simpleItem);
+
+        SimpleItem simpleItem2 = new SimpleItem();
+        em.persist(simpleItem2);
+
+        MyCompositeKey myCompositeKey = new MyCompositeKey();
+        myCompositeKey.setNumber("CK_NR_1");
+        myCompositeKey.setSeries("SERIES_1");
+        ItemWithCompKey itemWithCompKey = new ItemWithCompKey();
+        itemWithCompKey.setId(myCompositeKey);
+        itemWithCompKey.setValue("AAAAAAAAAAAAAAAAAAAAAAAAA");
+        itemWithCompKey.setValueNotPersisted("THIS SHOULD NOT GO TO A DB");
+        em.persist(itemWithCompKey);
+
 
         em.getTransaction().commit();
     }
