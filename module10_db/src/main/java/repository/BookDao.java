@@ -34,6 +34,25 @@ public class BookDao extends AbstractDao implements Dao<Book> {
         return books;
     }
 
+
+    public List<Book> findAllWithTemplate() {
+        List<Book> books = new ArrayList<>();
+
+        JdbcQueryTemplate<Book> template = new JdbcQueryTemplate<Book>() {
+            @Override
+            public Book mapItem(ResultSet resultSet) throws SQLException {
+                Book book = new Book();
+                book.setId(resultSet.getLong("id"));
+                book.setTitle(resultSet.getString("title"));
+                return book;
+            }
+        };
+
+        books = template.queryForList("select * from BOOK");
+
+        return books;
+    }
+
     @Override
     public Optional<Book> findById(long id) {
         Optional<Book> book = Optional.empty();

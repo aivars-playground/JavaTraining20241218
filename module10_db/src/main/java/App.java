@@ -72,5 +72,10 @@ public class App {
         bookDao.create(newBookToBeDeleted2);
         System.out.println("newBookToBeDeleted2->"+bookDao.findAll());
         System.out.println("Batchdelete:"+Arrays.toString(bookDao.deleteBatch(List.of(newBookToBeDeleted, newBookToBeDeleted2))));
+
+
+        List<Book> allBooksWithTemplateApproach = ((BookDao)bookDao).findAllWithTemplate();
+        System.out.println("allBooksWithTemplateApproach->"+allBooksWithTemplateApproach);
+
     }
 }
