@@ -1,13 +1,13 @@
-import model.Book;
-import repository.BookDao;
-import repository.Dao;
+import jdbc_repository.model.Book;
+import jdbc_repository.BookDao;
+import jdbc_repository.Dao;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class App {
+public class JdbcApp {
     public static void main(String[] args) {
 
         Dao<Book> bookDao = new BookDao();

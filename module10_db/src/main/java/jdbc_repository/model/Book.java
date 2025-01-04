@@ -1,4 +1,4 @@
-package model;
+package jdbc_repository.model;
 
 public class Book {
     private long id;

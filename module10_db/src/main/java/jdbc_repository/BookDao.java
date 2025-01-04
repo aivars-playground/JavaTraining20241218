@@ -1,12 +1,11 @@
-package repository;
+package jdbc_repository;
 
-import model.Book;
+import jdbc_repository.model.Book;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 public class BookDao extends AbstractDao implements Dao<Book> {
 
