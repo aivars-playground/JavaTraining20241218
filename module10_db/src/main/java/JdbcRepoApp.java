@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class JdbcApp {
+public class JdbcRepoApp {
     public static void main(String[] args) {
 
         Dao<Book> bookDao = new BookDao();

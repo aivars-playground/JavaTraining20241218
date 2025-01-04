@@ -8,7 +8,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.util.logging.LogManager;
 
-public class HibernateApp {
+public class HibernateRepoApp {
     public static void main(String[] args) {
 
         switchToSLF4JBridge();
@@ -35,7 +35,7 @@ public class HibernateApp {
         jane.addTicket(toLa2);
         toLa2.setPassenger(jane);
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistenceUnit");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistenceUnit_airport");
         EntityManager em = emf.createEntityManager();
 
         em.getTransaction().begin();
@@ -50,6 +50,7 @@ public class HibernateApp {
         em.persist(toLa2);
 
         em.getTransaction().commit();
+        em.close();
     }
 
     static void switchToSLF4JBridge() {
