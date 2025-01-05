@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "PERSONS")
 @SecondaryTables({
         @SecondaryTable(
                 name = "NICENESS_DATA",
@@ -19,7 +18,6 @@ import lombok.Setter;
                         name = "person_id",
                         referencedColumnName = "id"))
 })
-
 @NoArgsConstructor
 public class NicePerson extends Person {
 

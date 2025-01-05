@@ -32,19 +32,19 @@ public class TestWithReport {
     }
 
     @Test
-    @DisplayName("show a nice test name")
+    @DisplayName("show a nice test number")
     void testWithDisplayName_Testing_Display_Name() {
         assertEquals(1,1);
     }
 
     @Test
-    @DisplayName("show a nice erroneous test name")   //does not seem to work with current surefire
+    @DisplayName("show a nice erroneous test number")   //does not seem to work with current surefire
     void testWithDisplayName_Testing_Display_Name_ERR() {
         assertEquals(1,2);
     }
 
     @ValueSource(ints = {1,3,5})
-    @DisplayName("PT name")
+    @DisplayName("PT number")
     @ParameterizedTest(name = "test if {0}=1")
     void paramTestWithDisplayName(Integer param) {
         assertEquals(param,1);
