@@ -1,5 +1,3 @@
-import hib_embed.ContainsEmbed;
-import hib_embed.EmbedSimpleClass;
 import hib_inheritance.TrainTicketOneWay;
 import hib_inheritance.TrainTicketReturn;
 import hib_inheritance.TrainTicketReturnWithExtras;
@@ -8,9 +6,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.util.List;
 
-public class HibIngeritanceApp {
+public class HibIngeritanceOneTableApp {
 
 
     public static void main(String[] args) {
