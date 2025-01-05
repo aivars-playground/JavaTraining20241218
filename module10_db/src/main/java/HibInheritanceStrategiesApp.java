@@ -57,16 +57,21 @@ public class HibInheritanceStrategiesApp {
         ) {
             em.getTransaction().begin();
 
-            em.persist(oneTableChildAAA);
-            em.persist(oneTableChildBBB);
-
             em.persist(jointTableChildAAA);
             em.persist(jointTableChildBBB);
 
             em.persist(perclassTableChildAAA);
             em.persist(perclassTableChildBBB);
 
+            em.persist(oneTableChildAAA);
+            em.persist(oneTableChildBBB);
+
             em.getTransaction().commit();
+
+
+            System.out.println("aaa->" + (em.find(OneTableChildAAA.class, oneTableChildAAA.getId()).getDifferentTypeOverlap() + 123));
+            System.out.println("bbb->" + (em.find(OneTableChildBBB.class, oneTableChildBBB.getId()).getDifferentTypeOverlap() + 123));
+
         }
     }
 }

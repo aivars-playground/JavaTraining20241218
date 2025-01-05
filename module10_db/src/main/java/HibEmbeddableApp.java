@@ -1,9 +1,12 @@
 import hib_embed.ContainsEmbed;
 import hib_embed.EmbedSimpleClass;
+import hib_embed.WithDataTypes;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class HibEmbeddableApp {
@@ -35,13 +38,42 @@ public class HibEmbeddableApp {
         attrs.put("key1", "value1");
         attrs.put("key2", "value2");
 
+        var withDataTypes = new WithDataTypes();
+        withDataTypes.name = "withDataTypes";
+        withDataTypes.createdAt = Instant.now();
+        withDataTypes.modifiedAt = LocalDateTime.now();
+        withDataTypes.isSomething = true;
+        withDataTypes.isSomethingElse = false;
+
+        Instant createdAtStart;
+        Instant createdAtSent;
+        Instant createdAtPostCommit;
+        Instant createdAtRead;
+
         try (
                 EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistenceUnit_airport");
                 EntityManager em = emf.createEntityManager()
         ) {
             em.getTransaction().begin();
             em.persist(containsEmbedd);
+
+            createdAtStart = withDataTypes.createdAt;
+            em.persist(withDataTypes);
+            createdAtSent = withDataTypes.createdAt;
+
             em.getTransaction().commit();
+
+            createdAtPostCommit = withDataTypes.createdAt;
+            createdAtRead = em.find(WithDataTypes.class, withDataTypes.getId()).createdAt;
+
+
         }
+
+        System.out.println("===============================================");
+        System.out.println("===============================================");
+        System.out.println("created at: " + createdAtStart
+        + ", created at sent: " + createdAtSent
+        + ", created at post: " + createdAtPostCommit
+        + ", created at read: " + createdAtRead);
     }
 }
