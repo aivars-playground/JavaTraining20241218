@@ -34,6 +34,9 @@ public class HibIngeritanceMultiTableApp {
             em.persist(firstLeg);
             em.persist(secondLeg);
             em.getTransaction().commit();
+
+            var found = em.find(BusTicketOneWay.class, 1);
+            System.out.println("========================================== found:" + found);
         }
     }
 }

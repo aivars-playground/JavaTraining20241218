@@ -1,3 +1,4 @@
+import hib_inheritance.TrainTicket;
 import hib_inheritance.TrainTicketOneWay;
 import hib_inheritance.TrainTicketReturn;
 import hib_inheritance.TrainTicketReturnWithExtras;
@@ -37,6 +38,9 @@ public class HibIngeritanceOneTableApp {
             em.persist(trainTicketReturn);
             em.persist(trainTicketReturnExtras);
             em.getTransaction().commit();
+
+            var found = em.find(TrainTicket.class, trainTicketOneWay.getId());
+            System.out.println("========================================== found:" + found);
         }
     }
 }
