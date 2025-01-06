@@ -68,6 +68,11 @@ public class HibJpqlApp {
             tqName.setParameter("name", "John Doe");
             tqName.getResultList().forEach(p -> System.out.println("---Passenger:"+p.getName()));
 
+            TypedQuery<Long> countAggregate = em.createQuery("select count(p) from Passenger p", Long.class);
+            System.out.println("====count:"+ countAggregate.getSingleResult());
+
+
+
 
             em.getTransaction().commit();
 
