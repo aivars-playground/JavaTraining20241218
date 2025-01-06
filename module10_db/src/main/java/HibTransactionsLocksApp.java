@@ -27,8 +27,9 @@ public class HibTransactionsLocksApp {
                         em.getTransaction().commit();
                         em.getTransaction().begin();
                         var trCheckDone = em.find(TrCheckWithNoLock.class, 1);
-                        System.out.println("--------------------"+trCheckDone);
                         em.getTransaction().commit();
+                        System.out.println("************ INIT " + trCheck.getName());
+
                     }
                 });
         }
@@ -47,6 +48,7 @@ public class HibTransactionsLocksApp {
                     Thread.sleep(delay);
                     System.out.println("************ END @"+delay+" ->"+trCheck.getName());
                     em.getTransaction().commit();
+                    System.out.println("************ POST @"+delay+" ->"+trCheck.getName());
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
