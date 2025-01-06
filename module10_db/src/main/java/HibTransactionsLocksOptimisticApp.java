@@ -1,3 +1,4 @@
+import hib_transaction_locking.TrCheckWithLock;
 import hib_transaction_locking.TrCheckWithNoLock;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -5,11 +6,11 @@ import jakarta.persistence.Persistence;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class HibTransactionsLocksApp {
+public class HibTransactionsLocksOptimisticApp {
 
     static AtomicInteger counter = new AtomicInteger(0);
 
-    class NoLocks {
+    class Locks {
         public static Thread getInitThread() {
                 return new Thread(() -> {
                     try (
@@ -17,7 +18,7 @@ public class HibTransactionsLocksApp {
                             EntityManager em = emf.createEntityManager();
                     ) {
                         em.getTransaction().begin();
-                        TrCheckWithNoLock trCheck = new TrCheckWithNoLock();
+                        TrCheckWithLock trCheck = new TrCheckWithLock();
                         trCheck.setId(1);
                         trCheck.setName("test_"+counter.getAndIncrement());
                         em.persist(trCheck);
@@ -38,7 +39,7 @@ public class HibTransactionsLocksApp {
                         EntityManager em = emf.createEntityManager();
                 ) {
                     em.getTransaction().begin();
-                    var trCheck = em.find(TrCheckWithNoLock.class, 1);
+                    var trCheck = em.find(TrCheckWithLock.class, 1);
                     System.out.println("************ START @"+delay+" ->"+trCheck.getName());
                     trCheck.setName("test_"+counter.getAndIncrement());
                     System.out.println("************ SET @"+delay+" ->"+trCheck.getName());
@@ -47,9 +48,12 @@ public class HibTransactionsLocksApp {
                     em.getTransaction().commit();
                     System.out.println("************ POST @"+delay+" ->"+trCheck.getName());
                 } catch (InterruptedException e) {
+                    System.out.println("-----------failed @"+delay);
                     throw new RuntimeException(e);
                 }
-            });
+                System.out.println("------------------------------------------------------@"+delay);
+            }
+            );
         }
 
     }
@@ -58,17 +62,18 @@ public class HibTransactionsLocksApp {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("******************************************************");
         System.out.println("Starting HibTransactionsLocksApp");
-        var initial = NoLocks.getInitThread();
+        var initial = Locks.getInitThread();
         initial.start();
         initial.join();
 
-        var update1 = NoLocks.getUpdateThread(1000);
-        var update2 = NoLocks.getUpdateThread(0);
+        var update1 = Locks.getUpdateThread(1000);
+        var update2 = Locks.getUpdateThread(0);
 
         update1.start();
         Thread.sleep(200);
         update2.start();
         update1.join();
 
+        //thread update1 had an internal error   - jakarta.persistence.RollbackException
     }
 }
