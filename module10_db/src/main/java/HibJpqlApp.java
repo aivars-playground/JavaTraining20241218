@@ -4,6 +4,9 @@ import hib_repository.Ticket;
 import hib_transaction_locking.TrCheckWithLock;
 import hib_transaction_locking.TrCheckWithNoLock;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -103,6 +106,20 @@ public class HibJpqlApp {
             em.createQuery("delete from Airport a where a.id=:id")
                             .setParameter("id", 55)
                                     .executeUpdate();
+
+
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+
+            System.out.println("---CriteriaBuilder----------------------");
+            CriteriaQuery<Passenger> criteriaQuery = cb.createQuery(Passenger.class);
+            Root<Passenger> root = criteriaQuery.from(Passenger.class);
+            em.createQuery(criteriaQuery).getResultList().stream().forEach(p -> System.out.println("---Passenger:"+p.getName()));
+
+            var nameToFind = "Jane Doe";
+            criteriaQuery.select(root).where(cb.equal(root.get("name"), nameToFind));
+            em.createQuery(criteriaQuery).getResultList().forEach(p -> System.out.println("-@@@@@@@@@@@@@@@@@@@@@@@@@@--Passenger:"+p.getName()));
+
+
 
             em.getTransaction().commit();
 
