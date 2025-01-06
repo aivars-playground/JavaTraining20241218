@@ -1,11 +1,8 @@
-import hib_transaction.TrCheck;
-import hib_transaction_locking.hib_transaction.TrCheckWithNoLock;
+import hib_transaction_locking.TrCheckWithNoLock;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import jakarta.persistence.RollbackException;
 
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class HibTransactionsLocksApp {

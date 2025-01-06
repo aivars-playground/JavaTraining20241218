@@ -1,4 +1,4 @@
-package hib_transaction_locking.hib_transaction;
+package hib_transaction_locking;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
