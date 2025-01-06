@@ -11,6 +11,10 @@ import java.util.List;
 @Entity
 @Table(name = "PASSENGERS")
 @NoArgsConstructor
+@NamedQueries({
+        @NamedQuery(name = "Passenger.findAll", query = "select p from Passenger p order by p.name"),
+        @NamedQuery(name = "Passenger.findByName", query = "select p from Passenger p where p.name = :name")
+})
 public class Passenger {
 
     @Id
