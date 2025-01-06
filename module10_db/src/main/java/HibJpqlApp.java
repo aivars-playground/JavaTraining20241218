@@ -68,11 +68,41 @@ public class HibJpqlApp {
             tqName.setParameter("name", "John Doe");
             tqName.getResultList().forEach(p -> System.out.println("---Passenger:"+p.getName()));
 
+            TypedQuery<Passenger> tqName2 = em.createQuery("select p from Passenger p where p.name = :name", Passenger.class)
+                    .setParameter("name", "John Doe");
+            tqName.getResultList().forEach(p -> System.out.println("---Passenger:"+p.getName()));
+
+
+
             TypedQuery<Long> countAggregate = em.createQuery("select count(p) from Passenger p", Long.class);
             System.out.println("====count:"+ countAggregate.getSingleResult());
 
+            em.createQuery("insert into Passenger(id,name) values(:id,:name)")
+                            .setParameter("id", 31)
+                            .setParameter("name", "John Doe")
+                            .executeUpdate();
 
+            em.createQuery("insert into Airport(id,name) values(:airportId,:airportName)")
+                            .setParameter("airportId", 31)
+                            .setParameter("airportName", "ABA")
+                            .executeUpdate();
 
+            Airport ap = em.find(Airport.class, 31);
+            System.out.println("---Airport:"+ap.getName()+ " id;"+ap.getId());
+
+            em.createQuery("update Passenger p set p.name=:name, p.airport=:airport where p.id=:id")
+                            .setParameter("name", "AAA")
+                            .setParameter("airport", ap)
+                            .setParameter("id", 1)
+                            .executeUpdate();
+
+            em.createQuery("insert into Airport(id,name) values(:airportId,:airportName)")
+                    .setParameter("airportId", 55)
+                    .setParameter("airportName", "LOL")
+                    .executeUpdate();
+            em.createQuery("delete from Airport a where a.id=:id")
+                            .setParameter("id", 55)
+                                    .executeUpdate();
 
             em.getTransaction().commit();
 
