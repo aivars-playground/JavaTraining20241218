@@ -21,4 +21,18 @@ public class Overflow {
 
     }
 
+    @Test
+    void test_shift() {
+        int seven = 7;
+        System.out.println("7/2 = " + (seven)/2);
+        System.out.println("7 >> 1 = " + (seven >> 1));
+
+        System.out.println("-7/2 = " + (-seven)/2);           //-3
+        System.out.println("-7 >> 1 = " + ((-seven) >> 1));   //-4
+
+        System.out.println("7 >>> 1 = " + (seven >>> 1));
+        System.out.println("-7 >>> 1 = " + ((-seven) >>> 1) ); //2147483644 ??????
+
+    }
+
 }
