@@ -67,6 +67,10 @@ public class Overflow {
                 multiply(BigDecimal.valueOf(7,0), new MathContext(0, RoundingMode.HALF_EVEN)).toPlainString() ));
 
 
+
+        System.out.println(" ==" + (BigDecimal.valueOf(202,2).
+                multiply(BigDecimal.valueOf(202,2)).toPlainString() ));
+
     }
 
 }
