@@ -66,12 +66,24 @@ public class Overflow {
         String f1 = "40900000";
         Integer f1i = Integer.parseInt(f1, 16);
         Float f2 = Float.intBitsToFloat(f1i);
-        System.out.println("f1 = " + f2);
+        System.out.println("f2 = " + f2);
+
+
+        float r2 =  2f;
+        int ir2 = Float.floatToIntBits( r2 );
+        System.out.printf( "2f = %X%n", ir2 );
 
 
         float o2 =  0.2f;
         int io2 = Float.floatToIntBits( o2 );
         System.out.printf( "0.2f = %X%n", io2 );                 //3E4CCCCD
+
+
+        String fo2 = "3E4CCCCD";
+        Integer fo2i = Integer.parseInt(fo2, 16);
+        Float f2i = Float.intBitsToFloat(fo2i);
+        System.out.println("f2i = " + f2i);
+
 
         float o2a =  0.3f - 0.1f;
         int io2a = Float.floatToIntBits( o2a );
