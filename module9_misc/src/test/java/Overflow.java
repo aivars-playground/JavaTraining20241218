@@ -67,6 +67,15 @@ public class Overflow {
         Integer f1i = Integer.parseInt(f1, 16);
         Float f2 = Float.intBitsToFloat(f1i);
         System.out.println("f1 = " + f2);
+
+
+        float o2 =  0.2f;
+        int io2 = Float.floatToIntBits( o2 );
+        System.out.printf( "0.2f = %X%n", io2 );                 //3E4CCCCD
+
+        float o2a =  0.3f - 0.1f;
+        int io2a = Float.floatToIntBits( o2a );
+        System.out.printf( "0.3f - 0.1f = %X%n", io2a );        //3E4CCCCE  <---- E!!!
     }
 
     @Test
@@ -82,7 +91,6 @@ public class Overflow {
         float o3 =  0.3f;
         float o2 =  0.2f;
         System.out.println("o.3 - o.11 float:" + (o3 - o1) + " o2:" +o2 );
-
         System.out.println("(o.3 - o.1) == o.2 :" + ((o3 - o1) == o2) );
 
         System.out.println(" ==" + (BigDecimal.valueOf(0.3f).subtract(BigDecimal.valueOf(0.1f))).toPlainString() );
