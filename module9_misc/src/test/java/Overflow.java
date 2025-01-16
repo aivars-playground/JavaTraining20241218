@@ -40,6 +40,32 @@ public class Overflow {
     }
 
     @Test
+    void test_float_overflow() {
+        float max = Float.MAX_VALUE;  //0x1.fffffeP+127     3.4028235E38
+        float min = Float.MIN_VALUE;  //0x1.fffffeP+127     1.4E-45f
+        System.out.println("max = " + max + " min = " + min);
+
+        float s = max + min;
+        System.out.println("s = " + s);
+
+        float s1 = max + 1E32f;
+        System.out.println("s1 = " + s1); //infinity
+
+
+        float aa = 0x1.AA11eP+1f;
+        System.out.println("aa = " + aa);
+
+        Float f = 4.5f;
+        int i = Float.floatToIntBits( f );
+        System.out.printf( "X = %X%n", i );
+
+        String f1 = "40900000";
+        Integer f1i = Integer.parseInt(f1, 16);
+        Float f2 = Float.intBitsToFloat(f1i);
+        System.out.println("f1 = " + f2);
+    }
+
+    @Test
     void test_float() {
         System.out.println("Max int:" + Integer.MAX_VALUE );
         System.out.println("Max flt:" + BigDecimal.valueOf(Float.MAX_VALUE).toPlainString() );
