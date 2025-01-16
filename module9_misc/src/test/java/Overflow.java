@@ -57,7 +57,11 @@ public class Overflow {
 
         Float f = 4.5f;
         int i = Float.floatToIntBits( f );
-        System.out.printf( "X = %X%n", i );
+        System.out.printf( "4.5  = %X%n", i );  //40900000
+
+        Float fminus = -4.5f;
+        int iminus = Float.floatToIntBits( fminus );
+        System.out.printf( "-4.5 = %X%n", iminus ); //C0900000
 
         String f1 = "40900000";
         Integer f1i = Integer.parseInt(f1, 16);
