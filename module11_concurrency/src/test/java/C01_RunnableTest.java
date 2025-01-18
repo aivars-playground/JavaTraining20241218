@@ -1,5 +1,11 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Stream;
+
 public class C01_RunnableTest {
 
     @Test
@@ -174,4 +180,88 @@ public class C01_RunnableTest {
 
         System.out.println("c->"+Count.count);
     }
+
+
+    @Test
+    void locks_sync_exit_too_early() throws InterruptedException {
+
+        class Count {
+            public static int count = 0;
+
+             public synchronized static void increment() {
+                int current = count;
+                System.out.println("Before count->"+count +" @thread:"+Thread.currentThread().getName()); // reduced by 5... overwrites
+                count = current + 1;
+                System.out.println("After count->"+count +" @thread:"+Thread.currentThread().getName());  // reduced by 8 .. exits rtoo early
+            }
+        }
+
+        for(int i=0;i<10;i++) {
+            Thread t = new Thread( () -> Count.increment());
+            t.start();
+        }
+
+
+        System.out.println("c->"+Count.count + " ... not 10, ups...");
+    }
+
+    @Test
+    void locks_sync_exit() throws InterruptedException {
+
+        class Count {
+            public static int count = 0;
+
+            public static synchronized void increment() {
+                count++;
+            }
+        }
+
+        for(int i=0;i<100000;i++) {
+            Thread t = new Thread( () -> Count.increment());
+            t.start();
+        }
+        Thread.sleep(15000);
+        System.out.println("c->"+Count.count + "=100000 ... 99998 - 999999 ups");
+    }
+
+
+    @Test
+    void locks_sync_atomic() throws InterruptedException {
+
+        AtomicInteger count = new AtomicInteger(0);
+
+        for(int i=0;i<1000000;i++) {
+            Thread t = new Thread( () -> count.getAndAdd(1));
+            t.start();
+        }
+        System.out.println("c->"+count.get() + " 99999");
+    }
+
+    @Test
+    void test_locks() throws InterruptedException {
+
+        class Lockable {
+            public static int count = 0;
+            public static Lock lock = new ReentrantLock();
+            public static void increment() {
+                try {
+                    lock.lock();
+                    int current = count;
+                    System.out.println("Before count->"+count +" @thread:"+Thread.currentThread().getName());
+                    count = current + 1;
+                    System.out.println("After count->"+count +" @thread:"+Thread.currentThread().getName());
+                } finally {
+                    lock.unlock();
+                }
+            }
+        }
+
+        for(int i=0;i<100000;i++) {
+            Thread t = new Thread( () -> Lockable.increment());
+            t.start();
+        }
+        Thread.sleep(15000);
+        System.out.println("c->"+Lockable.count + "=100000 ... 99998 - 999999 ups");
+    }
+
 }
