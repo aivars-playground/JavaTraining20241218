@@ -118,7 +118,7 @@ public class C02_CallableTest {
             class MyCallable {
                 Future<UUID> getOne(int nr){
                     return executor.schedule(() -> {
-                        System.out.println("sratrting--"+nr + " thread"+Thread.currentThread().getName());
+                        System.out.println("starting--"+nr + " thread"+Thread.currentThread().getName());
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
