@@ -305,4 +305,45 @@ public class C01_RunnableTest {
         System.out.println("c->"+Lockable.count + "=1000");
     }
 
+
+    @Test
+    void test_try_lock_1sec() throws InterruptedException {
+        class Lockable {
+            public static int count = 0;
+            public static Lock lock = new ReentrantLock();
+
+            public static void increment() throws InterruptedException {
+                var tryLock = lock.tryLock(1, TimeUnit.SECONDS);
+                System.out.println("tryLock->"+tryLock + " @thread:"+Thread.currentThread().getName());
+                if (tryLock) {
+                    try {
+                        int current = count;
+                        System.out.println("Before count->"+count +" @thread:"+Thread.currentThread().getName());
+                        count = current + 1;
+                        System.out.println("After count->"+count +" @thread:"+Thread.currentThread().getName());
+                    } finally {
+                        lock.unlock();
+                    }
+                } else {
+                    System.out.println("------------------------------DID NOT GET LOCK");
+                }
+
+
+            }
+        }
+
+        for(int i=0;i<1000;i++) {
+            Thread t = new Thread( () -> {
+                try {
+                    Lockable.increment();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            t.start();
+        }
+        Thread.sleep(15000);
+        System.out.println("c->"+Lockable.count + "=1000");
+    }
+
 }
