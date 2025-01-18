@@ -302,7 +302,7 @@ public class C01_RunnableTest {
             t.start();
         }
         Thread.sleep(15000);
-        System.out.println("c->"+Lockable.count + "=1000");
+        System.out.println("c->"+Lockable.count + "<1000");
     }
 
 
