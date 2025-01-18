@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
@@ -344,6 +346,22 @@ public class C01_RunnableTest {
         }
         Thread.sleep(15000);
         System.out.println("c->"+Lockable.count + "=1000");
+    }
+
+    @Test
+    void executor_single() {
+
+        AtomicInteger count = new AtomicInteger(0);
+
+        try (ExecutorService executor = Executors.newCachedThreadPool()){
+            for (int i = 0; i < 10; i++) {
+                executor.execute(() -> {
+                    count.incrementAndGet();
+                    System.out.println("count->"+count.toString() + " @thread:"+Thread.currentThread().getName());
+                });
+            }
+        }
+        System.out.println("c->"+count.get() + " from ... executor");
     }
 
 }
