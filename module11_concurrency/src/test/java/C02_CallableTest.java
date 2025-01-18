@@ -105,4 +105,47 @@ public class C02_CallableTest {
             }
         }
     }
+
+
+
+    @Test
+    void cancel_future() throws ExecutionException, InterruptedException {
+
+        int futureSchedulledAfter = 2;
+        int futureTimeoutsAfter = 1;
+
+        try( ScheduledExecutorService executor = Executors.newScheduledThreadPool(20)) {
+            class MyCallable {
+                Future<UUID> getOne(int nr){
+                    return executor.schedule(() -> {
+                        System.out.println("sratrting--"+nr + " thread"+Thread.currentThread().getName());
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return UUID.randomUUID();
+                    }, futureSchedulledAfter , TimeUnit.SECONDS);
+                }
+            }
+
+            var mc = new MyCallable();
+            Future<UUID> future1 =  mc.getOne(1);
+
+            try {
+                System.out.println("unexpected->"+ future1.get(futureTimeoutsAfter, TimeUnit.SECONDS));
+            } catch (TimeoutException ex) {
+                System.out.println("timeout, as expected");
+                future1.cancel(true);
+            }
+
+            Future<UUID> future2 =  mc.getOne(2);
+            try {
+                System.out.println("unexpected->"+ future2.get(futureSchedulledAfter, TimeUnit.SECONDS));
+            } catch (TimeoutException ex) {
+                System.out.println("timeout, as expected + throws exception");
+                future2.cancel(true);
+            }
+        }
+    }
 }
