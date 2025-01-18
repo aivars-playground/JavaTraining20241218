@@ -18,8 +18,9 @@
         <module>module7_parameterized_tests</module>
         <module>module8_test_report</module>
         <module>module9_misc</module>
-        <module>module11_creationalPatterns</module>
         <module>module10_db</module>
+        <module>module11_concurrency</module>
+        <module>module12_creationalPatterns</module>
     </modules>
 
     <properties>
