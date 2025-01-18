@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -262,6 +263,46 @@ public class C01_RunnableTest {
         }
         Thread.sleep(15000);
         System.out.println("c->"+Lockable.count + "=100000 ... 99998 - 999999 ups");
+    }
+
+    @Test
+    void test_try_locks() throws InterruptedException {
+        class Lockable {
+            public static int count = 0;
+            public static Lock lock = new ReentrantLock();
+
+            public static void increment() throws InterruptedException {
+                var tryLock = lock.tryLock();
+                System.out.println("tryLock->"+tryLock + " @thread:"+Thread.currentThread().getName());
+                if (tryLock) {
+                    try {
+                        int current = count;
+                        System.out.println("Before count->"+count +" @thread:"+Thread.currentThread().getName());
+                        count = current + 1;
+                        System.out.println("After count->"+count +" @thread:"+Thread.currentThread().getName());
+                    } finally {
+                        lock.unlock();
+                    }
+                } else {
+                    System.out.println("------------------------------DID NOT GET LOCK");
+                }
+
+
+            }
+        }
+
+        for(int i=0;i<1000;i++) {
+            Thread t = new Thread( () -> {
+                try {
+                    Lockable.increment();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            t.start();
+        }
+        Thread.sleep(15000);
+        System.out.println("c->"+Lockable.count + "=1000");
     }
 
 }
