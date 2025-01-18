@@ -78,4 +78,31 @@ public class C02_CallableTest {
             }
         }
     }
+
+
+    @Test
+    void cached_thread_pool() throws ExecutionException, InterruptedException {
+
+        try( ExecutorService executor = Executors.newCachedThreadPool()) {
+            class MyCallable {
+                Future<UUID> getOne(int nr){
+                    return executor.submit(() -> {
+                        System.out.println("--"+nr + " thread"+Thread.currentThread().getName());
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return UUID.randomUUID();
+                    });
+                }
+            }
+
+            var mc = new MyCallable();
+
+            for (int i = 0; i < 100; i++) {
+                mc.getOne(i);
+            }
+        }
+    }
 }
