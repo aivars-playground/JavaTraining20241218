@@ -55,7 +55,7 @@ public class C04_VirtualThreads {
 
 
         long stop = System.currentTimeMillis();
-        System.out.println("System thread time: " + (stop - start)  ); ///9_638
+        System.out.println("System thread time: " + (stop - start)  ); ///19_638  slower than thread join
 
     }
 
