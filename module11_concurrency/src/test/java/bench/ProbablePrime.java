@@ -9,6 +9,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ import java.util.stream.IntStream;
 @State(Scope.Benchmark)
 public class ProbablePrime{
 
-    @Param({"10"})
+    @Param({"10","100","1000"})
     private int N;
 
     @Param({"64"})
@@ -62,7 +63,36 @@ public class ProbablePrime{
                 .collect(Collectors.toList());
     }
 
-    public static void main(String[] args) throws RunnerException {
+    private Random random = new Random();
+    private List<Integer> integers;
+        @Setup
+    public void setup(){
+            integers = IntStream.range(0,N)
+                    .mapToObj(indx -> random.nextInt())
+                    .collect(Collectors.toList());
+    }
+
+    //Benchmark                     (BIT_LENGTH)   (N)  Mode  Cnt   Score    Error  Units
+    //ProbablePrime.sum_sequential            64    10  avgt   15  ? 10??           ms/op
+    //ProbablePrime.sum_sequential            64   100  avgt   15  ? 10??           ms/op
+    //ProbablePrime.sum_sequential            64  1000  avgt   15   0.001 ?  0.001  ms/op
+    @Benchmark
+    public double sum_sequential() {
+        return integers.stream().mapToInt(i -> i).sum();
+    }
+
+    //Benchmark                   (BIT_LENGTH)   (N)  Mode  Cnt  Score    Error  Units
+    //ProbablePrime.sum_parallel            64    10  avgt   15  0.005 ?  0.001  ms/op
+    //ProbablePrime.sum_parallel            64   100  avgt   15  0.007 ?  0.001  ms/op
+    //ProbablePrime.sum_parallel            64  1000  avgt   15  0.005 ?  0.001  ms/op
+    @Benchmark
+    public double sum_parallel() {
+            //slower!!!!!!!!!!
+        return integers.stream().mapToInt(i -> i).parallel().sum();
+    }
+
+    public static void main(String[] args) throws RunnerException
+{
         Options opt = new OptionsBuilder()
                 .include(ProbablePrime.class.getName() + ".sum_of_primes")
                 .build();
