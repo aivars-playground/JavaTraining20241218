@@ -1,5 +1,6 @@
 package bench;
 
+import org.hibernate.mapping.Set;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -9,9 +10,9 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -91,8 +92,41 @@ public class ProbablePrime{
         return integers.stream().mapToInt(i -> i).parallel().sum();
     }
 
-    public static void main(String[] args) throws RunnerException
-{
+
+    @Benchmark
+    public void sum_customThreadpool() throws ExecutionException, InterruptedException {
+
+        ConcurrentHashMap.KeySetView<String, Boolean> mySet = ConcurrentHashMap.newKeySet();
+
+        Map<String,Long> threadStatistics = new ConcurrentHashMap<>();
+
+        ForkJoinPool forkJoinPool = new ForkJoinPool(3);
+        Callable<Integer> task = () -> {
+            int sum = IntStream.range(0,N)
+                    .map(i -> i * 3)
+                    .parallel()
+                    .peek(i -> threadStatistics.merge(Thread.currentThread().getName(),1l,Long::sum))
+                    .peek(i -> mySet.add(Thread.currentThread().getName()))
+                    .sum();
+            return sum;
+        };
+
+        ForkJoinTask<Integer> submit = forkJoinPool.submit(task);
+
+
+
+        forkJoinPool.shutdown();
+
+       // mySet.forEach(System.out::println);
+        System.out.println("----------------N:"+N+"-----------"+submit.get());
+        threadStatistics.forEach((k,v)->{
+            System.out.println("Thread:" + k + " count: " + v);
+        });
+    }
+
+
+
+    public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(ProbablePrime.class.getName() + ".sum_sequential")
                 .build();
