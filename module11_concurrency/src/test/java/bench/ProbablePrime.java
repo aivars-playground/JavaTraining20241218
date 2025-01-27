@@ -73,9 +73,9 @@ public class ProbablePrime{
     }
 
     //Benchmark                     (BIT_LENGTH)   (N)  Mode  Cnt   Score    Error  Units
-    //ProbablePrime.sum_sequential            64    10  avgt   15  ? 10??           ms/op
-    //ProbablePrime.sum_sequential            64   100  avgt   15  ? 10??           ms/op
-    //ProbablePrime.sum_sequential            64  1000  avgt   15   0.001 ?  0.001  ms/op
+    //ProbablePrime.sum_sequential            64    10  avgt   15  ≈ 10⁻⁴           ms/op
+    //ProbablePrime.sum_sequential            64   100  avgt   15  ≈ 10⁻⁴           ms/op
+    //ProbablePrime.sum_sequential            64  1000  avgt   15   0.001 ±  0.001  ms/op
     @Benchmark
     public double sum_sequential() {
         return integers.stream().mapToInt(i -> i).sum();
@@ -94,7 +94,7 @@ public class ProbablePrime{
     public static void main(String[] args) throws RunnerException
 {
         Options opt = new OptionsBuilder()
-                .include(ProbablePrime.class.getName() + ".sum_of_primes")
+                .include(ProbablePrime.class.getName() + ".sum_sequential")
                 .build();
         new Runner(opt).run();
     }
