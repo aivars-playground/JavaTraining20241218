@@ -52,7 +52,15 @@ public class C06_Tasks {
         ExecutorService es = Executors.newSingleThreadExecutor();
         CompletableFuture<String> cf = CompletableFuture.supplyAsync(supplierTask, es);
         es.shutdown();
-        System.out.println(cf.get());
+        System.out.println(cf.get()); //pool-1-thread-1
     }
+
+    @Test
+    public void supplierPattern_Executor_Default_pool() throws InterruptedException, ExecutionException {
+        Supplier<String> supplierTask = () -> Thread.currentThread().getName();
+        CompletableFuture<String> cf = CompletableFuture.supplyAsync(supplierTask);
+        System.out.println(cf.get());   //ForkJoinPool.commonPool-worker-1
+    }
+
 
 }
