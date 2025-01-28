@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 
-public class C06_Tasks {
+public class C05_Tasks {
 
     @Test
     public void tasks() {
@@ -61,6 +61,7 @@ public class C06_Tasks {
         CompletableFuture<String> cf = CompletableFuture.supplyAsync(supplierTask);
         System.out.println(cf.get());   //ForkJoinPool.commonPool-worker-1
     }
+
 
 
 }
