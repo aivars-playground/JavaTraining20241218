@@ -38,4 +38,34 @@ public class C06_CompletableFututre {
     }
 
 
+    @Test
+    public void completableFutures_complete_override_value() {
+
+        Supplier<String> supplier = () -> {
+            try {Thread.sleep(500);} catch (InterruptedException e) {throw new RuntimeException(e);}
+            return "Hello World";
+        };
+
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(supplier);
+        future.complete("LOL, do not care");
+
+        String result = future.join();
+        System.out.println("----" + result);
+    }
+
+    @Test
+    public void completableFutures_complete_obtrude_value() {
+
+        Supplier<String> supplier = () -> {
+            return "Hello World";
+        };
+
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(supplier);
+
+        System.out.println("----" + future.join());
+        future.complete("LOL, do not care");
+        System.out.println("----" + future.join());
+        future.obtrudeValue("really - do not care");  //forcefully replace err?
+        System.out.println("----" + future.join());
+    }
 }
