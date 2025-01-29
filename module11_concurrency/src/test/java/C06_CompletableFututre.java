@@ -68,4 +68,29 @@ public class C06_CompletableFututre {
         future.obtrudeValue("really - do not care");  //forcefully replace err?
         System.out.println("----" + future.join());
     }
+
+    @Test
+    public void completableFuture_that_does_not_exit() {
+        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+        Void waitsForewer = completableFuture.join();
+    }
+
+    @Test
+    public void completableFuture_that_is_forced_to_exit() {
+        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+
+        Runnable runnable = () -> {
+            try {Thread.sleep(5000);} catch (InterruptedException e) {throw new RuntimeException(e);}
+            completableFuture.complete(null);
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
+
+
+        System.out.println("-----------------------------------------------try join");
+        Void waitsForewer = completableFuture.join();
+        System.out.println("-----------------------------------------------should see this in 5 seconds");
+    }
+
 }
