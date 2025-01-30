@@ -1,5 +1,9 @@
 import org.junit.jupiter.api.Test;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -66,5 +70,80 @@ public class C10_FuturesPerformance {
             start.completeAsync(() -> null, executor);
         }
     }
+
+    @Test
+    public void tasks_example_http() {
+
+        HttpClient client = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("https://www.google.com"))
+                .build();
+
+        CompletableFuture<HttpResponse<String>> future =
+                client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+
+        int code = future.join().statusCode();
+        System.out.println(code);
+
+    }
+
+    @Test
+    public void tasks_example_http_g() {
+
+        HttpClient client = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("https://www.google.com"))
+                .build();
+
+        CompletableFuture<HttpResponse<String>> future =
+                client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+
+        future.thenAccept(res -> {
+            String body = res.body();
+            System.out.println("body: " + body.length() + " code:"+res.statusCode() + " " + Thread.currentThread().getName());
+        });
+
+        future.join();
+
+    }
+
+
+    @Test
+    public void tasks_example_http_google() {
+
+        HttpClient client = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("https://www.google.com"))
+                .build();
+
+        CompletableFuture<Void> start = new CompletableFuture<>();
+
+        CompletableFuture<HttpResponse<String>> future =
+                start.thenCompose(
+                        nil -> client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                );
+
+
+        var aa = future.thenAccept(res -> {
+            String body = res.body();
+            System.out.println("body: " + body.length() + " code:"+res.statusCode() + " " + Thread.currentThread().getName());
+        });
+
+        start.complete(null);
+        aa.join();
+    }
+
 
 }
