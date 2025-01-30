@@ -31,6 +31,8 @@ public class C09_ChainFuturesErrors {
         } catch (CompletionException e) {
             System.out.println("as expected, e: " + e.getMessage());
         }
+
+        System.out.println("getId --- done:" + getId.isDone() + " exceptionally:" + getId.isCompletedExceptionally() );
     }
 
 
@@ -63,6 +65,7 @@ public class C09_ChainFuturesErrors {
             System.out.println("as expected, e: " + e.getMessage());
         }
 
+        System.out.println("getId --- done:" + getId.isDone() + " exceptionally:" + getId.isCompletedExceptionally() );
 
     }
 
@@ -91,6 +94,9 @@ public class C09_ChainFuturesErrors {
         );
 
         System.out.println(cf.join());
+
+        System.out.println("getId --- done:" + getId.isDone() + " exceptionally:" + getId.isCompletedExceptionally() );
+
     }
 
 
