@@ -1,13 +1,9 @@
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import java.util.random.RandomGenerator;
-import java.util.stream.Collectors;
 
-public class C07_ChainFuturesAnyAll {
+public class C08_ChainFuturesAnyAll {
 
     @Test
     public void tasks_thenAcceptBoth() {
