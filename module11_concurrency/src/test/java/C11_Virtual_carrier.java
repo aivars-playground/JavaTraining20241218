@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public class C11_Virtual_carrier {
@@ -30,5 +32,32 @@ public class C11_Virtual_carrier {
 
         //virtual thread is running on a platform carrier thread
     }
+
+
+
+    @Test
+    void test_jump_carrier_threads() throws InterruptedException {
+        List<Thread> threads = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            int j = i;
+            Runnable task = () -> {
+                System.out.println("runs ^"+j+" on: " + Thread.currentThread());
+                sleep(500);
+                System.out.println("runs ^"+j+" on: " + Thread.currentThread());
+                sleep(500);
+                System.out.println("runs ^"+j+" on: " + Thread.currentThread());
+                sleep(500);
+                System.out.println("runs ^"+j+" on: " + Thread.currentThread());
+                sleep(500);
+                System.out.println("runs ^"+j+" on: " + Thread.currentThread());
+            };
+            threads.add(Thread.ofVirtual().unstarted(task));
+        }
+
+
+        threads.forEach(Thread::start);
+        sleep(5000);  //jumps from one to another carrier thread
+    }
+
 
 }
