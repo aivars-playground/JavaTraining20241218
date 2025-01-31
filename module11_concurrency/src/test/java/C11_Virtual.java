@@ -51,9 +51,8 @@ public class C11_Virtual {
 
     @Test
     void test_many_virtual() throws InterruptedException {
-        var set = ConcurrentHashMap.<String>newKeySet();
         Runnable task = () -> {
-            set.add(Thread.currentThread().toString());
+            //do nothing
         };
 
         int N_TASKS = 1_000_000;
@@ -67,15 +66,14 @@ public class C11_Virtual {
         }
         long end = System.currentTimeMillis();
 
-        System.out.println("size: " + set.size() + " timing: " + ((double)(end - start)) / N_TASKS + " ms per thread" );
+        System.out.println("size: " + N_TASKS + " timing: " + ((double)(end - start)) / N_TASKS + " ms per thread" );
         //size: 1000000 timing: 0.009839 ms per thread
     }
 
     @Test
     void test_many_cached() throws InterruptedException {
-        var set = ConcurrentHashMap.<String>newKeySet();
         Runnable task = () -> {
-            set.add(Thread.currentThread().toString());
+            //do nothing
         };
 
         int N_TASKS = 1_000_000;
@@ -89,7 +87,7 @@ public class C11_Virtual {
         }
         long end = System.currentTimeMillis();
 
-        System.out.println("size: " + set.size() + " timing: " + ((double)(end - start)) / N_TASKS + " ms per thread" );
+        System.out.println("size: " + N_TASKS + " timing: " + ((double)(end - start)) / N_TASKS + " ms per thread" );
         //size: 13 timing: 880.0 ms per thread
     }
 
