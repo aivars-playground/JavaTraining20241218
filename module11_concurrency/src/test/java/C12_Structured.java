@@ -3,10 +3,8 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.TimeoutException;
@@ -106,7 +104,6 @@ public class C12_Structured {
         }
     };
 
-
     @Test
     void test_structures_concurrency() throws InterruptedException, ExecutionException {
         System.out.println("structured:" + getStructured_StructuredTask());
@@ -122,4 +119,54 @@ public class C12_Structured {
         System.out.println("bestResultSoFar:" + getStructured_StructuredGetBest());
     }
 
+    static class MyCustomScope extends StructuredTaskScope<Integer> {
+        public class MyCustomException extends RuntimeException {}
+
+        private volatile Collection<Integer> results = new ConcurrentLinkedQueue<Integer>();
+        private volatile Collection<Throwable> errs = new ConcurrentLinkedQueue<>();
+
+        @Override
+        protected void handleComplete(Subtask<? extends Integer> subtask) {
+            switch (subtask.state()) {
+                case UNAVAILABLE -> throw new RuntimeException("subtask state UNAVAILABLE");
+                case SUCCESS -> results.add(subtask.get());
+                case FAILED -> errs.add(subtask.exception());
+            }
+        }
+
+        public Integer bestResult() {
+            return results.stream()
+                    .max(Integer::compare)
+                    .orElseThrow(this::whatWhentWrong);
+        }
+
+        public MyCustomException whatWhentWrong() {
+            var ex = new MyCustomException();
+            for (var e : errs) {
+                ex.addSuppressed(e);
+            }
+            return ex;
+        }
+    }
+
+
+
+    @Test
+    void test_get_structured_custom() throws InterruptedException, ExecutionException, TimeoutException {
+
+        try (var customScope = new MyCustomScope()) {
+            customScope.fork(() -> 1);
+            customScope.fork(() -> 2);
+            customScope.join();
+            System.out.println("got:"+customScope.bestResult() + " and error count:"+customScope.whatWhentWrong().getSuppressed().length);
+        }
+
+        try (var customScope = new MyCustomScope()) {
+            customScope.fork(() -> 1);
+            customScope.fork(() -> {throw new RuntimeException();});
+            customScope.join();
+            System.out.println("got:"+customScope.bestResult() + " and error count:"+customScope.whatWhentWrong().getSuppressed().length);
+        }
+
+    }
 }
