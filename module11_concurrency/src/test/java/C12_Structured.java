@@ -32,17 +32,19 @@ public class C12_Structured {
 
             scope.join();
 
+
+            List<String> res = new ArrayList<>();
             System.out.println("--f1:state--:" + f1.state());
             if (f1.state() == StructuredTaskScope.Subtask.State.SUCCESS) {
-                System.out.println("--f1:state:SUCCESS:"+f1.get());
+                res.add("--f1:state:SUCCESS:"+f1.get());
             }
 
             System.out.println("--f2:state--:" + f2.state());
             if (f2.state() == StructuredTaskScope.Subtask.State.SUCCESS) {
-                System.out.println("--f2:state:SUCCESS:"+f2.get());
+                res.add("--f1:state:SUCCESS:"+f1.get());
             }
 
-            return "res1:"+f1.get() + " res2:"+f2.get();
+            return res.toString();
 
         }
     };
@@ -169,4 +171,39 @@ public class C12_Structured {
         }
 
     }
+
+
+
+    static String getStructured_StructuredTask_fail_any_retirn_all() throws InterruptedException {
+        try (var scope = new StructuredTaskScope.ShutdownOnFailure()){
+            var f1 = scope.fork(() -> {
+                System.out.println("--f1:called--");
+                sleep(500);
+                return 1;
+            });
+            var f2 = scope.fork(() -> {
+                var fail = new Random().nextBoolean();
+                if (fail) {
+                    System.out.println("--f2:fail--");
+                    throw new RuntimeException("fail");
+                } else {
+                    System.out.println("--f2:returns--@" + Thread.currentThread().toString());
+                    return 2;
+                }});
+
+            scope.join();
+
+
+            return "res1:"+f1.get() + " res2:"+f2.get();
+
+        }
+    };
+
+
+    @Test
+    void test_fail_any() throws InterruptedException, ExecutionException, TimeoutException {
+        System.out.println("allOrNone:" + getStructured_StructuredTask_fail_any_retirn_all());
+    }
+
+
 }
