@@ -21,6 +21,7 @@
         <module>module10_db</module>
         <module>module11_concurrency</module>
         <module>module12_creationalPatterns</module>
+        <module>module99_demo</module>
     </modules>
 
     <properties>
